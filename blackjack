@@ -1,0 +1,97 @@
+import random
+
+# boolean values for who is still in the game
+playerIn = True
+dealerIn = True
+
+chips = 1000
+
+# create a deck of cards
+deck_of_cards = [2, 3, 4, 5, 6, 7, 8, 9, 10, 'J', 'Q', 'K', 'A',
+2, 3, 4, 5, 6, 7, 8, 9, 10, 'J', 'Q', 'K', 'A',
+2, 3, 4, 5, 6, 7, 8, 9, 10, 'J', 'Q', 'K', 'A',
+2, 3, 4, 5, 6, 7, 8, 9, 10, 'J', 'Q', 'K', 'A',
+]
+
+player_hand = []
+dealer_hand = []
+
+# create a function to choose random cards to deal
+def deal_card(turn):
+    card = random.choice(deck_of_cards)
+    turn.append(card)
+    deck_of_cards.remove(card)
+
+# calculate total for the dealt hands
+def total(turn):
+    total = 0
+    face = ['J', 'Q', 'K']
+    for card in turn:
+        if card in range(1, 11):
+            total += card
+        elif card in face:
+            total += 10
+        else:
+            if total > 11:
+                total += 1
+            else:
+                total += 11
+    return total
+
+# show dealers hand
+def reveal_dealer_hand():
+    if len(dealer_hand) == 2:
+        return dealer_hand[0]
+    elif len(dealer_hand) > 2:
+        return dealer_hand[0], dealer_hand [1]
+
+# deal 2 cards into both players hands
+for _ in range(2):
+    deal_card(dealer_hand)
+    deal_card(player_hand)
+
+# show hands and ask what user wants to do
+while playerIn or dealerIn:
+    print(f"Dealer has {reveal_dealer_hand()} and X")
+    print(f"You have {player_hand} for a total of {total(player_hand)}")
+    if playerIn:
+        stayOrHit = input("1: Stay\n2: Hit\n")
+    if total(dealer_hand) > 16:
+        dealerIn = False
+    else:
+        deal_card(dealer_hand)
+    if stayOrHit == "1":
+        playerIn = False
+    else:
+        deal_card(player_hand)
+    if total(player_hand) >= 21:
+        break
+    elif total(dealer_hand) >= 21:
+        break
+
+# sees who wins
+if total(player_hand) == 21:
+    print(f"\nYou have {player_hand} for a total of {total(player_hand)} and the dealer has {dealer_hand} for a total of {total(dealer_hand)}")
+    print("Blackjack! You win!")
+    chips += 150
+elif total(dealer_hand) == 21:
+    print(f"\nYou have {player_hand} for a total of {total(player_hand)} and the dealer has {dealer_hand} for a total of {total(dealer_hand)}")
+    print("Dealer wins!")
+    chips -= 100
+elif total(player_hand) > 21:
+    print(f"\nYou have {player_hand} for a total of {total(player_hand)} and the dealer has {dealer_hand} for a total of {total(dealer_hand)}")
+    print("You busted! Dealer wins!")
+    chips -= 100
+elif total(dealer_hand) > 21:
+    print(f"\nYou have {player_hand} for a total of {total(player_hand)} and the dealer has {dealer_hand} for a total of {total(dealer_hand)}")
+    print("Dealer busts! You win!")
+    chips += 100
+elif 21 - total(dealer_hand) < 21 - total(player_hand):
+    print(f"\nYou have {player_hand} for a total of {total(player_hand)} and the dealer has {dealer_hand} for a total of {total(dealer_hand)}")
+    print("Dealer wins!")
+    chips -= 100
+elif 21 - total(dealer_hand) > 21 - total(player_hand):
+    print("You win!")
+    chips += 100
+
+print(f"You ended up with {chips} chips")
