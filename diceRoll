@@ -1,0 +1,19 @@
+import random
+
+list1 = []
+
+run = True
+
+while run:
+    answer = input("Do you want to roll the dice? (y/n): ")
+    if answer.lower() == "y":
+        list1.append(random.randint(1, 10))
+        print(list1)
+    elif answer.lower() == "n":
+        break
+    else:
+        print("Not a valid response. Try again:")
+        continue
+
+print("\nThese are the numbers that you rolled:")
+print(str(list1))
